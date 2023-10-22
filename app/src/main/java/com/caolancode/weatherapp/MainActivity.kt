@@ -1,4 +1,4 @@
-package com.example.weatherapp
+package com.caolancode.weatherapp
 
 import android.os.Bundle
 import android.widget.ImageButton
@@ -8,6 +8,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,10 +18,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,24 +43,53 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.weatherapp.ui.theme.WeatherAppTheme
-import com.example.weatherapp.ui.theme.fontFamily
+import com.caolancode.weatherapp.R
+import com.caolancode.weatherapp.R.*
+import com.caolancode.weatherapp.ui.theme.WeatherAppTheme
+import com.caolancode.weatherapp.ui.theme.fontFamily
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Header()
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top,
+                modifier = Modifier
+                    .fillMaxSize()
+            ){
+                Header()
+                Text(
+                    text = "London",
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 25.sp,
+                    modifier = Modifier.padding(top = 30.dp)
+                    )
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceAround,
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    DayCard("Today", 11.2, 4.8, "Moderate rain")
+                    DayCard("Tomorrow", 21.37,12.8, "Sunny")
+                    DayCard("Monday", 9.2, 4.2, "High wind")
+                }
+            }
         }
     }
 }
@@ -66,7 +102,7 @@ fun Header() {
     }
     Row(
         modifier = Modifier
-            .background(colorResource(id = R.color.navy))
+            .background(colorResource(id = color.navy))
             .fillMaxWidth()
             .padding(6.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -96,6 +132,7 @@ fun Header() {
                 textStyle = TextStyle(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
+                    fontFamily = fontFamily,
                 )
             )
             Icon(
@@ -103,16 +140,63 @@ fun Header() {
                 contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.CenterVertically),
-                tint = colorResource(id = R.color.navy)
+                tint = colorResource(id = color.navy)
             )
         }
         Image(
-            painter = painterResource(id = R.drawable.google_icon),
+            painter = painterResource(id = drawable.google_icon),
             contentDescription = "Google logo",
             modifier = Modifier.clickable {
                 /* TODO */
             }
         )
     }
-    
+}
+
+@Composable
+fun DayCard(day: String, highTemp: Double, lowTemp: Double, condition: String) {
+    Card(
+        modifier = Modifier
+            .size(250.dp, 150.dp)
+            .clip(shape = RoundedCornerShape(10.dp))
+        ,
+        elevation = CardDefaults.cardElevation(defaultElevation = 20.dp)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colorResource(id = R.color.light_gray))
+        ) {
+            Text(
+                text = day,
+                modifier = Modifier
+                    .background(colorResource(id = R.color.navy))
+                    .fillMaxWidth()
+                    .padding(top = 5.dp, bottom = 5.dp)
+                ,
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                fontFamily = fontFamily,
+            )
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ){
+                Icon(imageVector = Icons.Default.Warning, contentDescription = "weather icon")
+                Column(
+                    modifier = Modifier.width(50.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ){
+                    Text(text = highTemp.toString(), fontFamily = fontFamily)
+                    Divider(color = Color.Black, thickness = 1.dp)
+                    Text(text = lowTemp.toString(), fontFamily = fontFamily)
+                }
+            }
+            Text(text = condition, fontFamily = fontFamily)
+        }
+    }
 }

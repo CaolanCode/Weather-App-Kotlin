@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.theme
+package com.caolancode.weatherapp.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
@@ -7,7 +7,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.unit.sp
-import com.example.weatherapp.R
+import com.caolancode.weatherapp.R
 
 // Google Fonts
 val provider = GoogleFont.Provider(
